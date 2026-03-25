@@ -1,0 +1,57 @@
+name: Playwright Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: Branch to run from
+        required: true
+        default: main
+
+      test_file:
+        description: Test file (optional)
+        required: false
+
+      tag:
+        description: Tag (optional, e.g. @smoke)
+        required: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch || 'main' }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+
+      - name: Run tests dynamically
+        run: |
+          if [ -n "${{ github.event.inputs.test_file }}" ] && [ -n "${{ github.event.inputs.tag }}" ]; then
+            echo "Running file with tag"
+            npx playwright test ${{ github.event.inputs.test_file }} --grep "${{ github.event.inputs.tag }}"
+
+          elif [ -n "${{ github.event.inputs.test_file }}" ]; then
+            echo "Running file"
+            npx playwright test ${{ github.event.inputs.test_file }}
+
+          elif [ -n "${{ github.event.inputs.tag }}" ]; then
+            echo "Running by tag"
+            npx playwright test --grep "${{ github.event.inputs.tag }}"
+
+          else
+            echo "Running all tests"
+            npx playwright test
+          fi
