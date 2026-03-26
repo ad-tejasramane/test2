@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('example test', async ({ page }) => {
-  const secret = process.env.MY_SECRET;
+  const secret = process.env.ADMIN_USERNAME;
 
   console.log('Secret value:', secret);
 
