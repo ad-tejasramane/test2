@@ -39,7 +39,7 @@ jobs:
 
       - name: Run tests dynamically
         env:
-          MY_SECRET: ${{ secrets.MY_SECRET }}
+          ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
         run: |
           echo "Checking if secret exists..."
           if [ -z "$MY_SECRET" ]; then
