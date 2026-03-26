@@ -1,6 +1,14 @@
 import { test, expect } from '@playwright/test';
 
 test('example test', async ({ page }) => {
+  const secret = process.env.MY_SECRET;
+
+  console.log('Secret value:', secret);
+
+  // Simple validation
+  expect(secret).toBeDefined();
+  expect(secret).not.toBe('');
+
   await page.goto('https://example.com');
   await expect(page).toHaveTitle(/Example/);
 });
